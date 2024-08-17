@@ -1,0 +1,42 @@
+{
+  "originHash" : "546b1542a7bacf6e5b165afdea89c4730b73fcaeb7d4997c8bba970c8f78da3e",
+  "pins" : [
+    {
+      "identity" : "sebbu-c-libuv",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MarSe32m/sebbu-c-libuv.git",
+      "state" : {
+        "revision" : "25cb76606cfc2eb4ad65206239177692c6614768",
+        "version" : "1.48.0"
+      }
+    },
+    {
+      "identity" : "sebbu-networking",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MarSe32m/sebbu-networking.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ebfb3ffbc3d953c6a2272a7768a4beef770d454d"
+      }
+    },
+    {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9e6597236356dadea31b681cea6a09e8e065fc85"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "11433b688df0e0b8c3deee56c30294ed63d929eb"
+      }
+    }
+  ],
+  "version" : 3
+}
