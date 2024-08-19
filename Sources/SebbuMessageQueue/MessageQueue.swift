@@ -48,7 +48,7 @@ internal final class MessageQueue {
     @usableFromInline
     internal var currentBytes: Int = 0
 
-    public init(name: String, maxBytes: Int = 1 << 22) {
+    public init(name: String, maxBytes: Int = 1 << 28) {
         self.name = name
         self.maxBytes = maxBytes
     }

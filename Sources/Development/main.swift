@@ -66,7 +66,59 @@ func testAsyncClient() async throws {
     try await poppingTask.value
 }
 
-try await testAsyncClient()
+func testAsyncMultipleClients() async throws {
+    //let ip = "172.19.16.91"
+    let ip = "127.0.0.1"
+    try await withThrowingTaskGroup(of: Int.self) { group in 
+        // Pusher
+        group.addTask {
+            let client = try await AsyncMessageQueueClient.connect(host: ip, port: 25565, username: "sebbu", password: "passwrd")
+            let data = (0..<1024).map { _ in UInt8.random(in: .min ... .max) }
+            var dataPushed = 0
+            while dataPushed < 1024 * 1024 * 1024 {
+                if dataPushed % (1024 * 1024) == 0 {
+                    print("Data pushed:", dataPushed)
+                }
+                do {
+                    try await client.tryPush(queue: "QUEUE", data)
+                    dataPushed += data.count
+                } catch {
+                    if let error = error as? PushError {
+                        switch error {
+                            case .connectionClosed: throw error
+                            case .queueFull: print("Queue was full")
+                            case .timeout: fatalError("unreachable")
+                        }
+                    }
+                }
+            }
+            return dataPushed
+        }
+        // Poppers
+        for _ in 0..<10 {
+            try await Task.sleep(for: .milliseconds(100))
+            group.addTask {
+                let client = try await AsyncMessageQueueClient.connect(host: ip, port: 25565, username: "sebbu", password: "passwrd")
+                var dataReceived = 0
+                while true {
+                    do {
+                        let data = try await client.pop(queue: "QUEUE", timeout: .seconds(1))
+                        dataReceived -= data.count
+                    } catch {
+                        print("Popper error:", error)
+                        break
+                    }
+                }
+                return dataReceived
+            }
+        }
+        var total = 0
+        for try await dataDiff in group {
+            total += dataDiff
+        }
+        print("TOTAL DIFF:", total)
+        precondition(total == 0)
+    }
+}
 
-try await Task.sleep(for: .seconds(5))
-print("Done")
+try await testAsyncMultipleClients()
