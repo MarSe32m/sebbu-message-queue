@@ -6,7 +6,8 @@ Thread.detachNewThread {
     server.run()
 }
 
-Thread.sleep(forTimeInterval: 1)
+let sleep = { (time: TimeInterval) in Thread.sleep(forTimeInterval: time)}
+sleep(1)
 
 func testSyncClient() throws {
     let client = try MessageQueueClient.connect(host: "172.19.30.73", port: 25565, username: "sebbu", password: "passwrd")

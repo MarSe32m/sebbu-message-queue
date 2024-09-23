@@ -1,4 +1,5 @@
 import SebbuNetworking
+import Synchronization
 
 public final class MessageQueueServer {
     @usableFromInline
@@ -131,7 +132,7 @@ internal extension MessageQueueServer {
     @usableFromInline
     final class Client {
         @usableFromInline
-        static var currentID: Int = 0
+        static let currentID: Atomic<Int> = Atomic(0)
 
         @usableFromInline
         let reader: PacketReader
@@ -153,8 +154,7 @@ internal extension MessageQueueServer {
             self.clientChannel = client
             self.reader = PacketReader(client: client)
             self.writer = PacketWriter(client: client)
-            self.id = Client.currentID
-            Client.currentID += 1
+            self.id = Client.currentID.wrappingAdd(1, ordering: .relaxed).newValue
         }
 
         func receive() throws -> MessageQueuePacket? {

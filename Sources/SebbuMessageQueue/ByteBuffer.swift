@@ -1,7 +1,7 @@
 import DequeModule
 
 @usableFromInline
-enum ByteCount: Int {
+enum ByteCount: Int, Sendable {
     case one = 1
     case two = 2
     case four = 4
@@ -9,7 +9,7 @@ enum ByteCount: Int {
 }
 
 @usableFromInline
-struct ByteBuffer {
+struct ByteBuffer: Sendable {
     @usableFromInline
     var buffers: Deque<[UInt8]> = Deque()
 

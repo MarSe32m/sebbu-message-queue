@@ -1,5 +1,5 @@
 import SebbuNetworking
-import Atomics
+import Synchronization
 
 public final class AsyncMessageQueueClient: @unchecked Sendable {
     @usableFromInline
@@ -11,19 +11,18 @@ public final class AsyncMessageQueueClient: @unchecked Sendable {
     }
 
     @usableFromInline
-    let running: ManagedAtomic<Bool>
+    let running: Atomic<Bool>
 
     @inlinable
     internal init(client: MessageQueueClient) {
         self.client = client
-        let running = ManagedAtomic<Bool>(true)
-        self.running = running
+        self.running = Atomic<Bool>(true)
         _ = Thread {
-            while running.load(ordering: .relaxed) { 
+            while self.running.load(ordering: .relaxed) { 
                 do {
                     try client.update(wait: true) 
                 } catch {
-                    running.store(false, ordering: .relaxed)
+                    self.running.store(false, ordering: .relaxed)
                 }
             }
         }
