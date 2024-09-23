@@ -1,5 +1,4 @@
 import SebbuNetworking
-import Atomics
 
 public final class MessageQueueClient {
     @usableFromInline
